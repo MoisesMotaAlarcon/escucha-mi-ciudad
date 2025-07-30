@@ -1,25 +1,33 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "../services/firebase";
 import "../styles/styles.css";
 
 const Register = () => {
-  const [name, setName] = useState("");
   const [usuario, setUsuario] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (name.trim() === "" || usuario.trim() === "" || password.trim() === "") {
+    if (!usuario.trim() || !email.trim() || !password.trim()) {
       setError("Por favor completa todos los campos.");
       return;
     }
 
-    setError("");
-    // Simula registro exitoso
-    navigate("/login");
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(userCredential.user, {
+        displayName: usuario,
+      });
+      navigate("/login");
+    } catch (err) {
+      setError("Error al registrarse: " + err.message);
+    }
   };
 
   return (
@@ -29,17 +37,17 @@ const Register = () => {
       <form className="login-form" onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Nombre completo"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          placeholder="Usuario"
+          value={usuario}
+          onChange={(e) => setUsuario(e.target.value)}
           required
           className="login-input"
         />
         <input
-          type="text"
-          placeholder="Usuario"
-          value={usuario}
-          onChange={(e) => setUsuario(e.target.value)}
+          type="email"
+          placeholder="Correo electrónico"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
           className="login-input"
         />
