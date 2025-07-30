@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../services/firebase"; // Asegúrate de importar desde tu ruta
 import "../styles/styles.css";
 
 const Login = () => {
@@ -8,7 +10,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (usuario.trim() === "" || password.trim() === "") {
@@ -16,9 +18,13 @@ const Login = () => {
       return;
     }
 
-    setError("");
-    // Simula login exitoso
-    navigate("/uploads");
+    try {
+      await signInWithEmailAndPassword(auth, usuario, password);
+      setError("");
+      navigate("/uploads");
+    } catch (err) {
+      setError("Error al iniciar sesión: " + err.message);
+    }
   };
 
   return (
@@ -27,8 +33,8 @@ const Login = () => {
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form className="login-form" onSubmit={handleSubmit}>
         <input
-          type="text"
-          placeholder="Usuario"
+          type="email"
+          placeholder="Correo electrónico"
           value={usuario}
           onChange={(e) => setUsuario(e.target.value)}
           required
