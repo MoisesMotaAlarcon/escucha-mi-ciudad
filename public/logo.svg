@@ -1,0 +1,13 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo circular -->
+  <circle cx="60" cy="60" r="58" stroke="#1E88E5" stroke-width="4" fill="#E3F2FD"></circle>
+  
+  <!-- Icono de edificio (simplificado) -->
+  <rect x="45" y="50" width="10" height="40" fill="#1565C0"></rect>
+  <rect x="65" y="40" width="10" height="50" fill="#1565C0"></rect>
+  <rect x="55" y="60" width="10" height="30" fill="#1976D2"></rect>
+  
+  <!-- Ondas de sonido -->
+  <path d="M40 70 Q35 60 40 50" stroke="#1E88E5" stroke-width="3" fill="none"></path>
+  <path d="M35 75 Q28 60 35 45" stroke="#42A5F5" stroke-width="2" fill="none"></path>
+</svg>
