@@ -10,21 +10,24 @@ import Register from "./components/Register";
 
 import "./styles/styles.css";
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
-    <Router>
-      <Header />
-      <Routes>
-        <Route path="/" element={<StartScreen />} />
-        <Route path="/map" element={<MapView />} />
-        <Route path="/monuments" element={<MonumentDetail />} />
-        <Route path="/monument/:name" element={<MonumentDetail />} /> {/* Ruta detalle monumento */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
-      <Footer />
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<StartScreen />} />
+          <Route path="/map" element={<MapView />} />
+          <Route path="/monuments" element={<MonumentDetail />} />
+          <Route path="/monument/:name" element={<MonumentDetail />} /> {/* Ruta detalle monumento */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+        <Footer />
+      </Router>
+    </AuthProvider>
   );
 }
 

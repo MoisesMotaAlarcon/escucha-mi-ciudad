@@ -137,6 +137,33 @@ label #recoge {
   cursor: pointer;
 }
 
+/* Dropdown personalizado en header */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 6px;
+  z-index: 1000;
+  list-style: none;
+}
+
+.dropdown-menu li {
+  cursor: pointer;
+  color: #30608A;
+  font-weight: bold;
+}
+
+.dropdown-menu li:hover {
+  text-decoration: underline;
+}
+
 /* Header responsive */
 @media screen and (max-width: 768px) {
   #header .menu_container {
