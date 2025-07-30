@@ -1,4 +1,3 @@
-// src/context/AuthContext.js
 import React, { createContext, useState, useEffect } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../services/firebase";
@@ -23,3 +22,5 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+export default AuthProvider;
