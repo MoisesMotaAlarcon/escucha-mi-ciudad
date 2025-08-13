@@ -24,7 +24,7 @@ const Register = () => {
       await updateProfile(userCredential.user, {
         displayName: usuario,
       });
-      navigate("/login");
+      navigate("/MyUploads");
     } catch (err) {
       setError("Error al registrarse: " + err.message);
     }
