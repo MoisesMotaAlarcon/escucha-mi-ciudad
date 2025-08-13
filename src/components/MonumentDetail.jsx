@@ -12,9 +12,33 @@ function MonumentDetail() {
   const [loading, setLoading] = useState(true);
   const [geoError, setGeoError] = useState(null);
   const [page, setPage] = useState(0);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const navigate = useNavigate();
 
+  // Función para leer texto
+  const speakText = (text) => {
+    if (!text) return;
+    window.speechSynthesis.cancel(); // Cancelar lectura previa
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "es-ES";
+    utterance.rate = 1;
+    utterance.pitch = 1;
+
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const stopSpeaking = () => {
+    window.speechSynthesis.cancel();
+    setIsSpeaking(false);
+  };
+
+  // Cuando cambia la ruta, detener lectura y resetear página
   useEffect(() => {
+    stopSpeaking();
     setPage(0);
   }, [routeName]);
 
@@ -105,6 +129,7 @@ function MonumentDetail() {
     load();
     return () => {
       cancelled = true;
+      stopSpeaking(); // detener lectura si el componente se desmonta
     };
   }, [routeName]);
 
@@ -116,8 +141,10 @@ function MonumentDetail() {
   const goPrev = () => setPage((p) => Math.max(0, p - 1));
   const goNext = () => setPage((p) => Math.min(totalPages - 1, p + 1));
 
-  const handleCardClick = (title) => {
+  const handleCardClick = (title, description) => {
+    stopSpeaking(); // Detener cualquier lectura anterior
     navigate(`/monument/${encodeURIComponent(title)}`);
+    speakText(description); // Leer nueva tarjeta
   };
 
   return (
@@ -159,6 +186,13 @@ function MonumentDetail() {
             />
           )}
           <p>{topMonument.extract || "Sin descripción disponible."}</p>
+          <button
+            onClick={isSpeaking ? stopSpeaking : () => speakText(topMonument.extract)}
+            className="btn-access"
+            style={{ marginTop: "15px" }}
+          >
+            {isSpeaking ? "⏹ Detener" : "▶️ Escuchar"}
+          </button>
         </div>
       )}
 
@@ -173,7 +207,7 @@ function MonumentDetail() {
               <div
                 key={`${page}-${i}-${m.title}`}
                 className="card-item"
-                onClick={() => handleCardClick(m.title)}
+                onClick={() => handleCardClick(m.title, m.extract)}
                 style={{ cursor: "pointer" }}
               >
                 <figure>
