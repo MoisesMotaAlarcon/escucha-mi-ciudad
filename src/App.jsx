@@ -7,6 +7,8 @@ import MapView from "./components/MapView";
 import MonumentDetail from "./components/MonumentDetail";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import MyUploads from "./components/MyUploads";
+import UploadForm from "./components/UploadForm";
 
 import "./styles/styles.css";
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -24,6 +26,8 @@ function App() {
           <Route path="/monument/:name" element={<MonumentDetail />} /> {/* Ruta detalle monumento */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/uploads" element={<MyUploads />} />
+          <Route path="/upload" element={<UploadForm />} />
         </Routes>
         <Footer />
       </Router>
