@@ -1,3 +1,4 @@
+// src/components/UploadForm.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { storage, db, auth } from "../services/firebase";
@@ -11,14 +12,8 @@ function UploadForm() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // cuando el usuario selecciona archivo de galería
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-
-  // cuando el usuario toma foto con cámara
+  // cuando el usuario toma foto con cámara (PC)
   const handleCameraCapture = async (imageBase64) => {
-    // Convertir base64 a Blob
     const res = await fetch(imageBase64);
     const blob = await res.blob();
     setFile(blob);
@@ -30,7 +25,10 @@ function UploadForm() {
 
     setLoading(true);
     try {
-      const storageRef = ref(storage, `uploads/${auth.currentUser.uid}/${Date.now()}.jpg`);
+      const storageRef = ref(
+        storage,
+        `uploads/${auth.currentUser.uid}/${Date.now()}.jpg`
+      );
       await uploadBytes(storageRef, file);
       const fileUrl = await getDownloadURL(storageRef);
 
@@ -55,13 +53,19 @@ function UploadForm() {
     <div style={{ marginTop: "100px", textAlign: "center", color: "white" }}>
       <h2>Crear nueva subida</h2>
       <form onSubmit={handleSubmit} style={{ marginTop: "20px" }}>
+        <p>Selecciona una imagen o usa la cámara:</p>
+
+        {/* Input para móvil: galería o cámara */}
         <input
           type="file"
-          accept="image/*,audio/*"
-          onChange={handleFileChange}
-          style={{ marginBottom: "20px" }}
+          accept="image/*"
+          capture="environment" // cámara trasera
+          onChange={(e) => setFile(e.target.files[0])}
+          style={{ display: "block", margin: "10px auto" }}
         />
-        <p>O usa la cámara:</p>
+
+        {/* Webcam para PC */}
+        <p>O usa la cámara en PC:</p>
         <CameraCapture onCapture={handleCameraCapture} />
 
         <textarea
