@@ -1,21 +1,21 @@
-// src/pages/MyUploads.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-// Si tienes un servicio para obtener las subidas, lo importas aquí
-// import { getUserUploads } from "../services/uploadsService";
+import { storage, db } from "../services/firebase";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 function MyUploads() {
   const [uploads, setUploads] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const fileInputRef = useRef(null); // Ref para input de archivo
 
   useEffect(() => {
-    // Simulación: aquí iría la llamada real a Firestore o tu backend
     async function fetchUploads() {
       setLoading(true);
       try {
-        // const data = await getUserUploads(); // <- tu función real
-        const data = []; // Simulación: sin subidas aún
+        // Aquí iría tu llamada real a Firestore
+        const data = []; 
         setUploads(data);
       } catch (error) {
         console.error("Error cargando subidas:", error);
@@ -23,9 +23,57 @@ function MyUploads() {
         setLoading(false);
       }
     }
-
     fetchUploads();
   }, []);
+
+  // Función para abrir el selector de archivos
+  const handleNewUploadClick = () => {
+    fileInputRef.current.click();
+  };
+
+  // Función para subir la imagen a Firebase Storage
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const storageRef = ref(storage, `uploads/${Date.now()}_${file.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // Opcional: progreso de subida
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Progreso:", progress + "%");
+      },
+      (error) => {
+        console.error("Error subiendo archivo:", error);
+      },
+      async () => {
+        // Cuando termina la subida
+        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+        console.log("Archivo subido. URL:", downloadURL);
+
+        // Guardar referencia en Firestore
+        try {
+          const docRef = await addDoc(collection(db, "uploads"), {
+            imageUrl: downloadURL,
+            title: file.name,
+            text: "",
+            createdAt: serverTimestamp(),
+          });
+          console.log("Documento guardado con ID:", docRef.id);
+          setUploads((prev) => [
+            ...prev,
+            { id: docRef.id, imageUrl: downloadURL, title: file.name, text: "" },
+          ]);
+        } catch (err) {
+          console.error("Error guardando en Firestore:", err);
+        }
+      }
+    );
+  };
 
   return (
     <div className="section-grid" style={{ marginTop: "100px" }}>
@@ -55,7 +103,7 @@ function MyUploads() {
         >
           <p style={{ marginBottom: "20px" }}>No hay ninguna subida.</p>
           <button
-            onClick={() => navigate("/uploads")}
+            onClick={handleNewUploadClick}
             className="btn-access"
             style={{ padding: "10px 20px" }}
           >
@@ -101,6 +149,16 @@ function MyUploads() {
           ))}
         </div>
       )}
+
+      {/* Input oculto para seleccionar archivo */}
+      <input
+        type="file"
+        accept="image/*"
+        capture="environment"
+        ref={fileInputRef}
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+      />
     </div>
   );
 }
