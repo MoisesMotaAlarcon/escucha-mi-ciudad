@@ -1,5 +1,4 @@
-// src/components/UploadForm.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { storage, db, auth } from "../services/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -11,13 +10,17 @@ function UploadForm() {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
 
-  // cuando el usuario toma foto con cámara (PC)
-  const handleCameraCapture = async (imageBase64) => {
-    const res = await fetch(imageBase64);
-    const blob = await res.blob();
-    setFile(blob);
-  };
+  // Abrir cámara automáticamente en móviles
+  useEffect(() => {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile && fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  }, []);
+
+  const handleCameraCapture = (blob) => setFile(blob);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,10 +28,7 @@ function UploadForm() {
 
     setLoading(true);
     try {
-      const storageRef = ref(
-        storage,
-        `uploads/${auth.currentUser.uid}/${Date.now()}.jpg`
-      );
+      const storageRef = ref(storage, `uploads/${auth.currentUser.uid}/${Date.now()}.jpg`);
       await uploadBytes(storageRef, file);
       const fileUrl = await getDownloadURL(storageRef);
 
@@ -40,7 +40,7 @@ function UploadForm() {
       });
 
       alert("¡Subida exitosa!");
-      navigate("/myuploads");
+      navigate("/uploads");
     } catch (err) {
       console.error(err);
       alert("Error subiendo archivo");
@@ -55,16 +55,15 @@ function UploadForm() {
       <form onSubmit={handleSubmit} style={{ marginTop: "20px" }}>
         <p>Selecciona una imagen o usa la cámara:</p>
 
-        {/* Input para móvil: galería o cámara */}
         <input
+          ref={fileInputRef}
           type="file"
           accept="image/*"
-          capture="environment" // cámara trasera
+          capture="environment"
           onChange={(e) => setFile(e.target.files[0])}
           style={{ display: "block", margin: "10px auto" }}
         />
 
-        {/* Webcam para PC */}
         <p>O usa la cámara en PC:</p>
         <CameraCapture onCapture={handleCameraCapture} />
 

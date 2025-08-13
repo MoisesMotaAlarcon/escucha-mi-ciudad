@@ -1,32 +1,42 @@
-// src/components/CameraCapture.jsx
 import React, { useRef, useState, useEffect } from "react";
 import Webcam from "react-webcam";
 
 function CameraCapture({ onCapture }) {
   const webcamRef = useRef(null);
-  const [webcamAvailable, setWebcamAvailable] = useState(true);
+  const [webcamAvailable, setWebcamAvailable] = useState(null);
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
-    // Verifica si el navegador permite webcam
     navigator.mediaDevices
       .getUserMedia({ video: true })
       .then(() => setWebcamAvailable(true))
-      .catch(() => setWebcamAvailable(false));
+      .catch((err) => {
+        console.error("Error accediendo a la cámara:", err);
+        setErrorMsg("No se puede acceder a la cámara. Usa un dispositivo con cámara o revisa los permisos.");
+        setWebcamAvailable(false);
+      });
   }, []);
 
   const capture = () => {
-    if (!webcamRef.current) return alert("Webcam no disponible");
+    if (!webcamRef.current) return;
     const imageSrc = webcamRef.current.getScreenshot();
-    if (!imageSrc) return alert("No se pudo tomar la foto");
-    onCapture(imageSrc);
+    if (!imageSrc) {
+      alert("No se pudo tomar la foto. Intenta de nuevo.");
+      return;
+    }
+    // Convierte base64 a Blob
+    fetch(imageSrc)
+      .then(res => res.blob())
+      .then(blob => onCapture(blob))
+      .catch(() => alert("Error procesando la foto."));
   };
 
-  if (!webcamAvailable) {
-    return (
-      <p style={{ textAlign: "center", color: "white" }}>
-        No se puede acceder a la cámara. Asegúrate de estar en HTTPS o localhost y de dar permisos al navegador.
-      </p>
-    );
+  if (webcamAvailable === false) {
+    return <p style={{ textAlign: "center", color: "white" }}>{errorMsg}</p>;
+  }
+
+  if (webcamAvailable === null) {
+    return <p style={{ textAlign: "center", color: "white" }}>Verificando cámara...</p>;
   }
 
   return (
