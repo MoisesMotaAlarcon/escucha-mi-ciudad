@@ -38,12 +38,10 @@ function MapView() {
     const mapInstance = L.map("map").setView(SPAIN_CENTER, SPAIN_ZOOM);
     mapRef.current = mapInstance;
 
-    // Capa base OSM
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: "&copy; OpenStreetMap contributors",
     }).addTo(mapInstance);
 
-    // Capa para marcadores de lugares encontrados 
     placesLayerRef.current = L.layerGroup().addTo(mapInstance);
 
     setMapReady(true);
@@ -51,7 +49,6 @@ function MapView() {
     // Geolocalizar automáticamente al montar
     geolocateAndLoad();
 
-    // Limpieza
     return () => {
       if (mapRef.current) {
         mapRef.current.remove();
@@ -93,10 +90,8 @@ function MapView() {
       async (pos) => {
         const { latitude, longitude } = pos.coords;
 
-        // centra mapa en usuario
         mapRef.current.setView([latitude, longitude], 15);
 
-        // añade/actualiza marcador usuario
         if (userMarkerRef.current) {
           userMarkerRef.current.setLatLng([latitude, longitude]);
         } else {
@@ -106,7 +101,6 @@ function MapView() {
         }
         userMarkerRef.current.openPopup();
 
-        // busca lugares cercanos
         await fetchNearbyPlaces(latitude, longitude);
       },
       (err) => {
@@ -118,13 +112,12 @@ function MapView() {
 
   /* ------------------------------------------------------------------
      Búsqueda de lugares en Overpass
-     Se incluyen las categorías: monumentos, ayuntamientos, edificios públicos, 
+     Categorías: monumentos, ayuntamientos, edificios públicos, 
      plazas, municipal, patrimonio...
   ------------------------------------------------------------------ */
   const fetchNearbyPlaces = async (latitude, longitude) => {
     if (!mapRef.current || !placesLayerRef.current) return;
 
-    // Limpia marcadores anteriores
     placesLayerRef.current.clearLayers();
 
     const q = `[out:json][timeout:25];
@@ -227,7 +220,6 @@ function MapView() {
       }
 
       data.elements.forEach((el) => {
-        // Determinar coordenadas según tipo
         let lat, lon;
         if (el.type === "node") {
           lat = el.lat;
@@ -247,7 +239,6 @@ function MapView() {
 
         const marker = L.marker([lat, lon]).addTo(placesLayerRef.current);
 
-        // popup simple con botón
         const btnId = `details-btn-${el.type}-${el.id}`;
         marker.bindPopup(
           `<div style="text-align:center;">
@@ -256,7 +247,6 @@ function MapView() {
           </div>`
         );
 
-        // Cuando se abra este popup, se conecta con navegación
         marker.on("popupopen", () => {
           const btnEl = document.getElementById(btnId);
           if (btnEl) {
@@ -270,7 +260,6 @@ function MapView() {
     }
   };
 
-  // Render //
   return (
     <div>
       {/* Botones */}

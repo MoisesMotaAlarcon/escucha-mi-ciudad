@@ -100,7 +100,6 @@ function MyUploads() {
     );
   };
 
-  // Escucha en tiempo real
   useEffect(() => {
     if (!user) return;
 

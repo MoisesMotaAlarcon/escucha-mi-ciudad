@@ -137,7 +137,6 @@ label #recoge {
   cursor: pointer;
 }
 
-/* Botón hamburguesa nuevo (para React) */
 .hamburger-btn {
   display: none;
   font-size: 40px;
@@ -145,7 +144,6 @@ label #recoge {
   cursor: pointer;
 }
 
-/* Dropdown personalizado en header */
 .dropdown {
   position: relative;
 }
@@ -177,7 +175,6 @@ label #recoge {
    =============================== */
 @media screen and (max-width: 768px) {
 
-  /* Botón hamburguesa visible en móvil */
   .hamburger-btn {
     display: block;
     margin-left: auto;
@@ -207,17 +204,14 @@ label #recoge {
     padding-left: 10%;
   }
 
-  /* Menú abierto (nuevo para React) */
   nav ul.menu.abierto {
     left: 0;
   }
 
-  /* Mantengo tus reglas originales del checkbox (aunque ya no se usan) */
   input[type="checkbox"]:checked ~ nav .menu {
     left: 0;
   }
 
-  /* Iconos originales */
   label #desplega { display: block; }
   label #recoge  { display: none; }
 
@@ -233,10 +227,9 @@ label #recoge {
 main {
   margin: auto;
   background-color: #1d1313;
-  padding-top: 80px; /* deja espacio bajo header fijo */
+  padding-top: 80px; 
 }
 
-/* Imagen*/
 #ban {
   width: 100%;
   overflow: hidden;
@@ -269,7 +262,6 @@ main {
   margin-bottom: 15px;
 }
 
-/* contenedor de botones en StartScreen */
 .banner .buttons {
   margin-top: 10px;
   display: flex;
@@ -278,7 +270,6 @@ main {
   justify-content: center;
 }
 
-/* Botón genérico */
 .btn-access {
   display: inline-block;
   background-color: #30608A;
@@ -297,11 +288,13 @@ main {
   transform: scale(1.05);
 }
 
-/* Responsive banner */
+/* ===============================
+   Banner responsive
+   =============================== */
 @media screen and (max-width: 768px) {
   #ban {
     height: 700px;
-    align-items: flex-end;
+    align-items: center;
     padding-bottom: 20px;
   }
 
@@ -327,7 +320,6 @@ footer {
   position: relative;
 }
 
-/* Grid de 3 columnas */
 .footer_grid {
   display: grid;
   grid-template-columns: 1fr 4fr;
@@ -339,7 +331,6 @@ footer {
   position: relative;
 }
 
-/* Líneas arriba y abajo */
 .footer_grid::before,
 .footer_grid::after {
   content: '';
@@ -359,7 +350,6 @@ footer {
   bottom: 0;
 }
 
-/* Logo a la izquierda */
 .footer_box.logo_box {
   display: flex;
   justify-content: flex-start;
@@ -373,7 +363,6 @@ footer {
   display: block;
 }
 
-/* Bloque texto+iconos centrado en las dos columnas */
 .footer_box.content_box {
   grid-column: 2 / 4;
   text-align: center;
@@ -388,7 +377,6 @@ footer p {
   margin-bottom: 15px;
 }
 
-/* Redes sociales */
 footer nav ul {
   display: flex;
   gap: 20px;
@@ -409,7 +397,6 @@ footer nav li i:hover {
   cursor: pointer;
 }
 
-/* Parte inferior */
 .footer_bottom {
   text-align: center;
   background-color: #1d1313;
@@ -418,7 +405,9 @@ footer nav li i:hover {
   font-size: 14px;
 }
 
-/* Responsive */
+/* ===============================
+   Footer responsive
+   =============================== */
 @media screen and (max-width: 768px) {
   .footer_grid {
     grid-template-columns: 1fr;
@@ -438,13 +427,13 @@ footer nav li i:hover {
   }
   
   .footer_box.logo_box {
-    transform: none; /* Centrado perfecto en móvil */
+    transform: none; 
   }
 }
 
-/* ==========================================================================
+/* ========================================
    Grid de Monumentos destacados
-   ========================================================================== */
+   ===================================== */
 
 .section-grid {
   padding: 30px 20px;
@@ -458,12 +447,11 @@ footer nav li i:hover {
   text-align: left;
 }
 
-/* Aquí cambiamos a grid en lugar de flex */
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 4 columnas */
+  grid-template-columns: repeat(3, 1fr); 
   gap: 20px;
-  justify-content: space-between; /* opcional */
+  justify-content: space-between; 
 }
 
 .card-item {
@@ -471,7 +459,6 @@ footer nav li i:hover {
   transition: transform 0.3s ease;
   overflow: visible;
   border-radius: 10px;
-  /* Ya no necesitas width fija porque grid controla */
 }
 
 .card-item figure {
@@ -511,7 +498,6 @@ footer nav li i:hover {
   margin-bottom: 5px;
 }
 
-/* Línea separadora */
 .section-grid::after {
   content: '';
   display: block;
@@ -522,11 +508,13 @@ footer nav li i:hover {
   margin: 40px auto 20px auto;
 }
 
-/* Responsive tarjetas */
+/* ===============================
+   Monumentos cercanos responsive
+   =============================== */
 @media screen and (max-width: 768px) {
   .card-grid {
-    grid-template-columns: 1fr; /* 1 columna */
-    gap: 20px;                 /* espacio entre tarjetas */
+    grid-template-columns: 1fr;
+    gap: 20px;                
     width: 100%;
   }
 
@@ -545,7 +533,6 @@ footer nav li i:hover {
    Estilos para Login y Registro Combinado 
    ========================================================================== */
 
-/* Contenedor principal */
 .login-container {
   max-width: 400px;
   margin: 100px auto;
@@ -556,21 +543,18 @@ footer nav li i:hover {
   text-align: center;
 }
 
-/* Título */
 .login-title {
   font-size: 24px;
   margin-bottom: 20px;
   color: #30608A;
 }
 
-/* Formulario */
 .login-form {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-/* Campos de entrada */
 .login-input {
   padding: 12px;
   font-size: 16px;
@@ -586,7 +570,6 @@ footer nav li i:hover {
   box-shadow: 0 0 4px #30608A;
 }
 
-/* Botón de acción (Login o Registro) */
 .login-button {
   padding: 12px;
   font-size: 16px;
@@ -603,14 +586,12 @@ footer nav li i:hover {
   transform: scale(1.03);
 }
 
-/* Texto informativo inferior */
 .login-text {
   margin-top: 15px;
   font-size: 14px;
   color: #555;
 }
 
-/* Botón de cambio entre Login y Registro */
 .switch-button {
   background: none;
   border: none;
@@ -624,8 +605,10 @@ footer nav li i:hover {
   text-decoration: underline;
 }
 
-/* Responsive */
-@media screen and (max-width: 600px) {
+/* ===============================
+   Login y Register responsive
+   =============================== */
+@media screen and (max-width: 768px) {
   .login-container {
     margin: 100px auto;
     padding: 24px;

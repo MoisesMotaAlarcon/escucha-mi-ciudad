@@ -5,12 +5,12 @@ function Footer() {
   return (
     <footer>
       <div className="footer_grid">
-        {/* Columna 1: Logo */}
+        {/* Columna Logo */}
         <div className="footer_box logo_box">
           <img src="/logo.png" alt="Logo Footer" className="logo" />
         </div>
 
-        {/* Columnas 2 y 3: Texto + Iconos */}
+        {/* Columnas Texto + Iconos */}
         <div className="footer_box content_box">
           <h2>Redes Sociales</h2>
           <p>Síguenos para estar al tanto de las últimas novedades.</p>
