@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-const PAGE_SIZE = 6;
+const PAGE_SIZE = 9;
 
 function MonumentDetail() {
   const { name: routeNameRaw } = useParams() || {};
@@ -62,7 +62,7 @@ function MonumentDetail() {
             const geoSearchUrl =
               `https://es.wikipedia.org/w/api.php?` +
               `action=query&list=geosearch&gscoord=${latitude}|${longitude}` +
-              `&gsradius=10000&gslimit=50&format=json&origin=*`;
+              `&gsradius=10000&gslimit=100&format=json&origin=*`;
 
             const response = await fetch(geoSearchUrl);
             const data = await response.json();
