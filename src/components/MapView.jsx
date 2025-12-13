@@ -120,93 +120,31 @@ function MapView() {
 
     placesLayerRef.current.clearLayers();
 
-    const q = `[out:json][timeout:25];
-      (
+    const q = `[out:json][timeout:15];
+    (
+      node["historic"~"monument|castle"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+      way["historic"~"monument|castle"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
 
-        /* Monumentos y castillos */
-        node["historic"="monument"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-        node["historic"="castle"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-        way["historic"="monument"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-        way["historic"="castle"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-        relation["historic"="monument"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-        relation["historic"="castle"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+      node["tourism"~"museum|attraction"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+      way["tourism"~"museum|attraction"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
 
-        /* Ayuntamientos */
-        node["amenity"="townhall"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-        way["amenity"="townhall"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-        relation["amenity"="townhall"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+      node["amenity"~"theatre|arts_centre|townhall"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+      way["amenity"~"theatre|arts_centre|townhall"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
 
-        /* Edificios públicos */
-        node["building"="public"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-        way["building"="public"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-        relation["building"="public"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+      node["building"="church"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+      way["building"="church"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
 
-        /* Plazas */
-        node["place"="square"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-        way["place"="square"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-        relation["place"="square"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+      node["man_made"="bridge"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+      way["man_made"="bridge"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
 
-        /* Otros lugares de interés turístico y cultural */
-        node["tourism"="attraction"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-        way["tourism"="attraction"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-        relation["tourism"="attraction"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+      node["place"="square"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+      way["place"="square"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
 
-        /* Parques y jardines */
-        way["leisure"="park"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-        way["leisure"="garden"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-        node["leisure"="park"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-        node["leisure"="garden"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+      node["leisure"="park"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+      way["leisure"="park"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+    );
+    out center;`;
 
-        /* Museos */ 
-        node["tourism"="museum"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        way["tourism"="museum"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-        relation["tourism"="museum"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        
-        /* Teatros */ 
-        node["amenity"="theatre"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        way["amenity"="theatre"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        relation["amenity"="theatre"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        
-        /* Auditorios / centros culturales */ 
-        node["amenity"="arts_centre"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        way["amenity"="arts_centre"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        relation["amenity"="arts_centre"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        node["amenity"="concert_hall"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        way["amenity"="concert_hall"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        relation["amenity"="concert_hall"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        
-        /* Edificios religiosos */ 
-        node["building"="church"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        way["building"="church"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        relation["building"="church"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        
-        node["building"="cathedral"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        way["building"="cathedral"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        relation["building"="cathedral"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        
-        node["building"="temple"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        way["building"="temple"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        relation["building"="temple"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-        
-        /* Bienes de Interés Cultural (BIC) */ 
-        node["heritage"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        way["heritage"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        relation["heritage"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        
-        /* Puentes */ 
-        node["bridge"="yes"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        way["bridge"="yes"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        relation["bridge"="yes"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        
-        node["man_made"="bridge"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-        way["man_made"="bridge"](around:${SEARCH_RADIUS_M},${latitude},${longitude}); 
-        relation["man_made"="bridge"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-
-        node["historic"="way"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-        way["historic"="way"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-        relation["historic"="way"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-      );
-      out center;`;
 
     const overpassUrl = "https://overpass-api.de/api/interpreter?data=" + encodeURIComponent(q);
 
