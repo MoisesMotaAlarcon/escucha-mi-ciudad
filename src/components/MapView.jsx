@@ -120,30 +120,45 @@ function MapView() {
 
     placesLayerRef.current.clearLayers();
 
-    const q = `[out:json][timeout:15];
+    const q = `[out:json][timeout:45];
     (
-      node["historic"~"monument|castle"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-      way["historic"~"monument|castle"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+      /* Monumentos y patrimonio */
+      node["historic"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+      way["historic"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
 
+      /* Edificios históricos y singulares */
+      node["building"]["historic"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+      way["building"]["historic"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+
+      /* Bienes protegidos */
+      node["heritage"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+      way["heritage"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+
+      /* Museos y cultura */
       node["tourism"~"museum|attraction"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
       way["tourism"~"museum|attraction"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
 
-      node["amenity"~"theatre|arts_centre|townhall"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-      way["amenity"~"theatre|arts_centre|townhall"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+      /* Teatros, auditorios, centros culturales */
+      node["amenity"~"theatre|arts_centre|concert_hall"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+      way["amenity"~"theatre|arts_centre|concert_hall"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
 
-      node["building"="church"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-      way["building"="church"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+      /* Edificios religiosos (TODOS) */
+      node["amenity"="place_of_worship"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+      way["amenity"="place_of_worship"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
 
+      /* Parques y jardines */
+      node["leisure"~"park|garden"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+      way["leisure"~"park|garden"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+
+      /* Plazas */
+      node["place"="square"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
+
+      /* Puentes importantes */
       node["man_made"="bridge"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
       way["man_made"="bridge"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-
-      node["place"="square"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-      way["place"="square"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-
-      node["leisure"="park"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
-      way["leisure"="park"](around:${SEARCH_RADIUS_M},${latitude},${longitude});
     );
-    out center;`;
+    out center tags;`;
+
 
 
     const overpassUrl = "https://overpass-api.de/api/interpreter?data=" + encodeURIComponent(q);
